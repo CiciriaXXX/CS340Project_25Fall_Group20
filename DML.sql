@@ -48,7 +48,7 @@ SELECT customerID, firstName, lastName, email, phoneNumber, address, loyaltyPoin
 SELECT email, phoneNumber, address, loyaltyPoints FROM Customers WHERE customerID = :customer_ID_from_dropdown_Input;
 
 -- get all employees
-SELECT employeeID, firstName, lastName, phoneNumber, position, payRate, hireDate FROM Employees;
+SELECT employeeID, firstName, lastName, phoneNumber, position, payRate, DATE_FORMAT(hireDate, '%Y-%m-%d') AS hireDate FROM Employees;
 
 -- get a specific employee for update
 SELECT phoneNumber,position, payRate FROM Employees WHERE employeeID = :employee_ID_from_dropdown_Input;
@@ -68,7 +68,7 @@ INNER JOIN Suppliers  ON Products.supplierID = Suppliers.supplierID
 WHERE Products.productID = :product_ID_from_dropdown_input;
 
 -- get all sales with customer and employee info, left join sales so that the sale records with non-rigisted customers will be displayed
-SELECT Sales.saleID, Sales.saleDate, CONCAT(Customers.firstName, ' ', Customers.lastName) AS customerFullName,
+SELECT Sales.saleID, DATE_FORMAT(Sales.saleDate, '%Y-%m-%d') AS saleDate, CONCAT(Customers.firstName, ' ', Customers.lastName) AS customerFullName,
        CONCAT(Employees.firstName, ' ', Employees.lastName) AS employeeFullName
 FROM Sales
 LEFT JOIN Customers ON Sales.customerID = Customers.customerID

@@ -158,6 +158,43 @@ app.get('/saledetails', async function (req, res) {
         res.status(500).send('An error occurred while executing the database queries.');
     }
 });
+
+// ########################################
+// ########## RESET & TEST ROUTES
+
+// Route to Reset the Database
+app.get('/reset-table-data', async function (req, res) {
+    try {
+        // Calls the Stored Procedure defined in DDL.sql to reset schema and data
+        const query = "CALL reset_db();"; 
+        await db.query(query);
+        console.log("Database Reset Completed.");
+        
+        // Redirect back to homepage
+        res.redirect('/'); 
+    } catch (error) {
+        console.error("Error resetting database:", error);
+        res.status(500).send("Error resetting database.");
+    }
+});
+
+// Route to Test the Delete (Demonstrates the Reset)
+app.get('/test-delete-customer', async function (req, res) {
+    try {
+        // Calls the Stored Procedure defined in PL.sql to delete a specific record
+        const query = "CALL delete_michael_chen();"; 
+        await db.query(query);
+        console.log("Test Delete Executed.");
+
+        // Redirect back to customers to verify the deletion
+        res.redirect('/customers'); 
+    } catch (error) {
+        console.error("Error executing test delete:", error);
+        res.status(500).send("Error executing test delete.");
+    }
+});
+
+
 // ########################################
 // ########## LISTENER
 

@@ -23,7 +23,7 @@
 
     {{{body}}}
 
-<script>
+{{{ '<script>' }}}
 // Fix delete forms - add method and action attributes that Handlebars is stripping on server
 document.addEventListener('DOMContentLoaded', function() {
     const deleteForms = document.querySelectorAll('form[id="delete_customer_form"]');
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-</script>
+{{{ '</script>' }}}
 
 </body>
 </html>

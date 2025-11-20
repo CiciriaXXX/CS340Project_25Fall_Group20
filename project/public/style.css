@@ -1,3 +1,11 @@
+/*
+ Citation for the following code:
+ Date: 11/19/2025
+ This file's is adapted from the OSU CS 340 starter code.
+ But we have modified cuForm style for better appearance.
+ https://canvas.oregonstate.edu/courses/2017561/pages/exploration-web-application-technology-2?module_item_id=25645131
+*/
+
 h1, h2 { margin-left: 16px;}
 table {border-collapse: collapse;margin-left: 32px;}
 th, td {
@@ -7,7 +15,6 @@ th, td {
 }
 th {background-color: #f2f2f2;}
 tr:nth-child(even) {background-color: #f9f9f9;}
-.cuForm { margin-left: 32px;}
 input, select { margin-bottom: 4px;margin-right: 12px;}
 nav {background-color: #cecece;padding: 16px;}
 a {margin-left: 16px;}

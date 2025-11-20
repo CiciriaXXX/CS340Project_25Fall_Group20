@@ -17,7 +17,12 @@ const db = require('./database/db-connector');
 
 // Handlebars
 const { engine } = require('express-handlebars'); // Import express-handlebars engine
-app.engine('.hbs', engine({ extname: '.hbs' })); // Create instance of handlebars
+app.engine('.hbs', engine({ 
+    extname: '.hbs',
+    defaultLayout: 'main',
+    layoutsDir: path.join(__dirname, 'views/layouts'),
+    partialsDir: path.join(__dirname, 'views/partials')
+})); // Create instance of handlebars
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', '.hbs'); // Use handlebars engine for *.hbs files.
 
@@ -28,7 +33,7 @@ app.set('view engine', '.hbs'); // Use handlebars engine for *.hbs files.
 // READ ROUTES
 app.get('/', async function (req, res) {
     try {
-        res.render('home.hbs'); // Render the home.hbs file
+        res.render('home', { layout: 'main' }); // Render the home.hbs file
     } catch (error) {
         console.error('Error rendering page:', error);
         // Send a generic error message to the browser
@@ -61,8 +66,13 @@ app.get('/', async function (req, res) {
 app.get('/customers', async function (req, res) {
     try {
         // Create and execute our queries
-        const query1 = "SELECT customerID, firstName, lastName, email, phoneNumber, address, loyaltyPoints FROM Customers;";
+        const query1 = "SELECT customerID, firstName, lastName, email, phoneNumber, address, loyaltyPoints FROM Customers ORDER BY customerID;";
         const [customers] = await db.query(query1);
+        console.log(`[CUSTOMERS ROUTE] Query returned ${customers.length} customers`);
+        if (customers.length > 0) {
+            console.log(`[CUSTOMERS ROUTE] First customer: ${customers[0].firstName} ${customers[0].lastName}`);
+            console.log(`[CUSTOMERS ROUTE] All customers:`, customers.map(c => `${c.customerID}: ${c.firstName} ${c.lastName}`).join(', '));
+        }
         // Render the customer file, and also send the renderer
         //  an object that contains our bsg_people and bsg_homeworld information
         res.render('customers', { customers:customers });
@@ -156,6 +166,40 @@ app.get('/saledetails', async function (req, res) {
     } catch (error) {
         console.error('Error executing queries:', error);
         res.status(500).send('An error occurred while executing the database queries.');
+    }
+});
+
+// ########################################
+// ########## DELETE ROUTES (CUD Operations)
+
+// DELETE route for customers
+app.delete('/delete-customer/:id', async function (req, res) {
+    try {
+        const customerID = req.params.id;
+        const query = "DELETE FROM Customers WHERE customerID = ?";
+        await db.query(query, [customerID]);
+        console.log("Customer deleted:", customerID);
+        res.status(200).send("Customer deleted successfully");
+    } catch (error) {
+        console.error("Error deleting customer:", error);
+        res.status(500).send("Error deleting customer.");
+    }
+});
+
+// POST route for customer deletion (handles form submissions)
+app.post('/delete-customer', async function (req, res) {
+    try {
+        const customerID = req.body.delete_customer_id;
+        if (!customerID) {
+            return res.status(400).send("Customer ID is required");
+        }
+        const query = "DELETE FROM Customers WHERE customerID = ?";
+        await db.query(query, [customerID]);
+        console.log("Customer deleted:", customerID);
+        res.redirect('/customers');
+    } catch (error) {
+        console.error("Error deleting customer:", error);
+        res.status(500).send("Error deleting customer.");
     }
 });
 

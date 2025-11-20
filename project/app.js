@@ -194,7 +194,7 @@ app.post('/create-customer', async function (req, res) {
             return res.status(400).send("First name, last name, and phone number are required");
         }
 
-        const query = "INSERT INTO Customers (firstName, lastName, phoneNumber, email, address, loyaltyPoints) VALUES (?, ?, ?, ?, ?, ?)";
+        const query = "CALL sp_create_customer(?,?,?,?,?,?)";
         await db.query(query, [
             create_firstNameInput,
             create_lastNameInput,
@@ -208,49 +208,49 @@ app.post('/create-customer', async function (req, res) {
         res.redirect('/customers');
     } catch (error) {
         console.error("Error creating customer:", error);
-        res.status(500).send("Error creating customer.");
+        res.status(500).send("Error creating customer. Please ensure that the phone number and email address are unique.");
     }
 });
 
 // POST route for updating customers
 app.post('/update-customer', async function (req, res) {
     try {
-        const { customer_ID_from_dropdown_Input, update_phoneInput, update_emailInput, addressInput, update_loyaltyPointsInput } = req.body;
+        const {update_customer_ID_from_dropdown_Input, update_phoneInput, update_emailInput, update_addressInput, update_loyaltyPointsInput } = req.body;
         
-        if (!customer_ID_from_dropdown_Input || !update_phoneInput) {
-            return res.status(400).send("Customer ID and phone number are required");
+        if (!update_customer_ID_from_dropdown_Input ) {
+            return res.status(400).send("Customer ID is required");
         }
 
-        const query = "UPDATE Customers SET phoneNumber = ?, email = ?, address = ?, loyaltyPoints = ? WHERE customerID = ?";
+        const query = "CALL sp_update_customer(?,?,?,?,?)";
         await db.query(query, [
+            update_customer_ID_from_dropdown_Input,
             update_phoneInput,
             update_emailInput || null,
-            addressInput || null,
+            update_addressInput || null,
             update_loyaltyPointsInput || 0,
-            customer_ID_from_dropdown_Input
         ]);
         
-        console.log("Customer updated:", customer_ID_from_dropdown_Input);
+        console.log("Customer updated:", update_customer_ID_from_dropdown_Input);
         res.redirect('/customers');
     } catch (error) {
         console.error("Error updating customer:", error);
-        res.status(500).send("Error updating customer.");
+        res.status(500).send("Error updating customer. Please ensure that the phone number and email address are unique.");
     }
 });
 
 // DELETE route for customers
-app.delete('/delete-customer/:id', async function (req, res) {
-    try {
-        const customerID = req.params.id;
-        const query = "DELETE FROM Customers WHERE customerID = ?";
-        await db.query(query, [customerID]);
-        console.log("Customer deleted:", customerID);
-        res.status(200).send("Customer deleted successfully");
-    } catch (error) {
-        console.error("Error deleting customer:", error);
-        res.status(500).send("Error deleting customer.");
-    }
-});
+//app.delete('/delete-customer/:id', async function (req, res) {
+   // try {
+       // const customerID = req.params.id;
+       // const query = "DELETE FROM Customers WHERE customerID = ?";
+       // await db.query(query, [customerID]);
+       // console.log("Customer deleted:", customerID);
+       // res.status(200).send("Customer deleted successfully");
+   // } catch (error) {
+    //    console.error("Error deleting customer:", error);
+     //   res.status(500).send("Error deleting customer.");
+  //  }
+//});
 
 // POST route for customer deletion (handles form submissions)
 app.post('/delete-customer', async function (req, res) {
@@ -259,7 +259,7 @@ app.post('/delete-customer', async function (req, res) {
         if (!customerID) {
             return res.status(400).send("Customer ID is required");
         }
-        const query = "DELETE FROM Customers WHERE customerID = ?";
+        const query = "CALL sp_delete_customer(?)";
         await db.query(query, [customerID]);
         console.log("Customer deleted:", customerID);
         res.redirect('/customers');

@@ -54,3 +54,12 @@ BEGIN
     WHERE customerID = p_customerID;
 END $$
 DELIMITER ;
+
+-- 5. SP to delete a SaleDetail (for Step 5)
+DROP PROCEDURE IF EXISTS sp_delete_saledetail $$
+CREATE PROCEDURE sp_delete_saledetail(IN p_saleDetailID INT)
+BEGIN
+    DELETE FROM SaleDetails WHERE saleDetailID = p_saleDetailID;
+END $$
+
+DELIMITER ;

@@ -44,7 +44,8 @@
 
 {{!-- CREATE FORM --}}
 <h2>Add a New Sale Detail</h2>
-<p>To add a new detail, please select the Sale ID and Product, then enter the quantity and price.</p>
+<p> To add a new detail, please select the Sale ID and Product, then enter the quantity and price.</p>
+<p> Please note that the quantity specified must not exceed the current inventory level of the corresponding product.</p>
 <form class="cuForm" id="create-saledetail-form" method="POST" action="/create-saledetail">
     
     <label for="create_sale_ID">Sale ID:</label>
@@ -75,6 +76,7 @@
 {{!-- UPDATE FORM --}}
 <h2>Update a Sale Detail</h2>
 <p>Select the specific Sale Detail ID you wish to update.</p>
+<p>Please note that the quantity specified must not exceed the current inventory level of the corresponding product.</p>
 <form class="cuForm" id="update-saledetail-form" method="POST" action="/update-saledetail">
     
     <label for="update_saleDetail_ID">Select Sale Detail:</label>

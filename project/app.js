@@ -7,9 +7,11 @@
 // https://canvas.oregonstate.edu/courses/2017561/pages/exploration-implementing-cud-operations-in-your-app?module_item_id=25645149
 
 // Citation for use of AI Tools:
-// Date: 12/02/2022
+// Date: 12/01/2025
 // Prompts used to generate pre-filling function for UPDATE operation:
 // When I update a row, I hope that after I select an ID to update, the other values will automatically fill in with the current values. How should I do this in Node.js?
+// Prompts used to generate route for reset database including reloading triggers:
+// Modify my route for resetting database, so that the triggers defined in triggers.sql will be reloaded.
 // AI Source URL: https://chatgpt.com/
 // ########################################
 // ########## SETUP
@@ -397,6 +399,15 @@ app.get('/reset-table-data', async function (req, res) {
         const query = "CALL sp_reset_db();"; 
         await db.query(query);
         console.log("Database Reset Completed.");
+        // Reload triggers
+        const fs = require('fs');
+        const triggersSql = fs.readFileSync("./database/triggers.sql", "utf8");
+        const statements = triggersSql.split(';;').map(s => s.trim()).filter(s => s.length > 0);
+
+        for (const stmt of statements) {
+            await db.query(stmt);
+}
+        console.log("Triggers Reloaded.");
         
         // Redirect back to homepage
         res.redirect('/'); 

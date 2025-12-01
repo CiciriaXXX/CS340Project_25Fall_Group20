@@ -100,3 +100,14 @@
 
   <input type="submit" value="Update Sale">
 </form>
+<script>
+    // Script to pre-fill update form fields based on selected sale
+    document.getElementById("update_saleIDInput").addEventListener("change", async function() {
+      const id = this.value;
+      const response = await fetch(`/api/sale/${id}`);
+      const sale = await response.json();
+      document.getElementById("update_customerIDInput").value = sale.customerID || "";
+      document.getElementById("update_employeeIDInput").value = sale.employeeID;
+      document.getElementById("update_saleDateInput").value = sale.saleDate.split('T')[0];
+});
+</script>

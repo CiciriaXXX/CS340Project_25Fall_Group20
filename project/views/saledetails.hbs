@@ -78,7 +78,7 @@
 <form class="cuForm" id="update-saledetail-form" method="POST" action="/update-saledetail">
     
     <label for="update_saleDetail_ID">Select Sale Detail:</label>
-    <select name="saleDetailID" id="update_saleDetail_ID" required>
+    <select name="saleDetailID" id="update_saleDetailID" required>
         <option value="" disabled selected>Select a Detail to Update</option>
         {{#each saledetails}}
         <option value="{{this.saleDetailID}}">{{this.saleDetailID}} - {{this.productName}} (Sale #{{this.saleID}})</option>
@@ -109,3 +109,19 @@
 
     <input type="submit" value="Update Sale Detail">
 </form>
+
+<script>
+    // Script to pre-fill update form fields based on selected sale detail
+    document.getElementById("update_saleDetailID").addEventListener("change", async function() {
+    const id = this.value;
+    if (!id) return;
+
+    const res = await fetch(`/api/saledetail/${id}`);
+    const data = await res.json();
+
+    document.getElementById("update_saleID").value = data.saleID;
+    document.getElementById("update_productID").value = data.productID;
+    document.getElementById("update_quantity").value = data.quantity;
+    document.getElementById("update_unitPrice").value = data.unitPrice;
+});
+</script>

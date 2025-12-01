@@ -114,6 +114,24 @@
 </form>
 
 <script>
+    // Script to pre-fill update form fields based on selected customer
+    document.getElementById("update_customerIDInput").addEventListener("change", async function() {
+    const id = this.value;
+    if (!id) return;
+
+    const res = await fetch(`/api/customer/${id}`);
+    const data = await res.json();
+
+    document.getElementById("update_firstNameInput").value = data.firstName;
+    document.getElementById("update_lastNameInput").value = data.lastName;
+    document.getElementById("update_phoneInput").value = data.phoneNumber;
+    document.getElementById("update_emailInput").value = data.email;
+    document.getElementById("update_addressInput").value = data.address;
+    document.getElementById("update_loyaltyPointsInput").value = data.loyaltyPoints;
+});
+</script>
+
+<script>
 // Fix delete forms - add method and action attributes that Handlebars is stripping
 document.addEventListener('DOMContentLoaded', function() {
     const deleteForms = document.querySelectorAll('form[id="delete_customer_form"]');

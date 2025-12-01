@@ -6,6 +6,11 @@
 // https://canvas.oregonstate.edu/courses/2017561/pages/exploration-web-application-technology-2?module_item_id=25645131
 // https://canvas.oregonstate.edu/courses/2017561/pages/exploration-implementing-cud-operations-in-your-app?module_item_id=25645149
 
+// Citation for use of AI Tools:
+// Date: 12/02/2022
+// Prompts used to generate pre-filling function for UPDATE operation:
+// When I update a row, I hope that after I select an ID to update, the other values will automatically fill in with the current values. How should I do this in Node.js?
+// AI Source URL: https://chatgpt.com/
 // ########################################
 // ########## SETUP
 
@@ -240,6 +245,14 @@ app.post('/update-customer', async function (req, res) {
     }
 });
 
+// GET route to fetch a single customer's data by ID (for pre-filling update form)
+app.get('/api/customer/:id', async function (req, res) {
+    const id = req.params.id;
+    const query = "CALL sp_get_customer_by_id(?)";
+    const [rows] = await db.query(query, [id]);
+    res.json(rows[0][0]);
+});
+
 // DELETE route for customers
 //app.delete('/delete-customer/:id', async function (req, res) {
    // try {
@@ -301,6 +314,14 @@ app.post('/update-saledetail', async function (req, res) {
     }
 });
 
+// GET route to fetch a single sale detail's data by ID (for pre-filling update form)
+app.get('/api/saledetail/:id', async function (req, res) {
+    const id = req.params.id;
+    const query = "CALL sp_get_saledetail_by_id(?)";
+    const [rows] = await db.query(query, [id]);
+    res.json(rows[0][0]);
+});
+
 // POST route for deleting Sale Details
 app.post('/delete-saledetail', async function (req, res) {
     try {
@@ -342,6 +363,14 @@ app.post('/update-sale', async function (req, res) {
         console.error("Error updating sale:", error);
         res.status(500).send("Error updating sale.");
     }
+});
+
+// GET route to fetch a single sale's data by ID (for pre-filling update form)
+app.get('/api/sale/:id', async function (req, res) {
+    const id = req.params.id;
+    const query = "CALL sp_get_sale_by_id(?)";
+    const [rows] = await db.query(query, [id]);
+    res.json(rows[0][0]);
 });
 
 // POST route for deleting Sales

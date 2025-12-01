@@ -156,13 +156,13 @@ COMMIT;
 -- ########## STORED PROCEDURES
 
 -- Drop stored procedures if they exist
-DROP PROCEDURE IF EXISTS reset_db;
+DROP PROCEDURE IF EXISTS sp_reset_db;
 
 DELIMITER //
 
 -- Stored Procedure to Reset Database
 -- This procedure drops all tables, recreates them, and reloads sample data
-CREATE PROCEDURE reset_db()
+CREATE PROCEDURE sp_reset_db()
 BEGIN
     SET FOREIGN_KEY_CHECKS=0;
     SET AUTOCOMMIT = 0;

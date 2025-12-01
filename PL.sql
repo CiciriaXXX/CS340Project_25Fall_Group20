@@ -29,6 +29,8 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_update_customer $$
 CREATE  PROCEDURE `sp_update_customer`(
     IN p_customerID INT,
+    IN p_firstName VARCHAR(100),
+    IN p_lastName VARCHAR(100),
     IN p_phoneNumber VARCHAR(20),
     IN p_email VARCHAR(255),
     IN p_address VARCHAR(500),
@@ -37,6 +39,8 @@ CREATE  PROCEDURE `sp_update_customer`(
 BEGIN
     UPDATE Customers
     SET 
+        firstName = p_firstName,
+        lastName = p_lastName,
         phoneNumber = p_phoneNumber,
         email = p_email,
         address = p_address,
@@ -62,5 +66,42 @@ CREATE PROCEDURE `sp_delete_saledetail`(IN p_saleDetailID INT)
 BEGIN
 	DELETE FROM SaleDetails
     WHERE saleDetailID = p_saleDetailID;
+END $$
+DELIMITER ;
+
+-- SP to update a sale detail
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_update_saledetail $$
+CREATE PROCEDURE `sp_update_saledetail`(
+    IN p_saleDetailID INT,
+    IN p_saleID INT,
+    IN p_productID INT,
+    IN p_quantity INT,
+    IN p_unitPrice DECIMAL(10,2)
+   
+)
+BEGIN
+	UPDATE SaleDetails
+    SET 
+        saleID = p_saleID,
+        productID = p_productID,
+        quantity = p_quantity,
+   	    unitPrice = p_unitPrice
+    WHERE saleDetailID = p_saleDetailID;
+END $$
+DELIMITER ;
+
+-- SP to create a sale detail
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_create_saledetail $$
+CREATE PROCEDURE `sp_create_saledetail`(
+    IN p_saleID INT,
+    IN p_productID INT,
+    IN p_quantity INT,
+    IN p_unitPrice DECIMAL(10,2)
+)
+BEGIN
+    INSERT INTO SaleDetails (saleID, productID, quantity, unitPrice)
+    VALUES (p_saleID, p_productID, p_quantity, p_unitPrice);
 END $$
 DELIMITER ;

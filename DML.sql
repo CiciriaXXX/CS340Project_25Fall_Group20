@@ -1,73 +1,62 @@
--- Create options
--- add a new category
-INSERT INTO Categories (categoryName, description)
-VALUES (:categoryNameInput, :categoryDescriptionInput);
+-- ########################################
+-- ########## SELECT QUERIES (Browsing/Dropdowns)
+-- ########################################
 
--- add a new supplier
-INSERT INTO Suppliers (supplierName, email, phoneNumber)
-VALUES (:supplierNameInput, :supplierEmailInput, :supplierPhoneInput);
+-- Selects all categories for the dropdown list
+SELECT categoryID, categoryName FROM Categories;
 
--- add a new customer
-INSERT INTO Customers (firstName, lastName, phoneNumber, email, address, loyaltyPoints)
-VALUES (:firstNameInput, :lastNameInput, :phoneInput, :emailInput, :addressInput, :loyaltyPointsInput);
-
--- add a new employee
-INSERT INTO Employees (firstName, lastName, phoneNumber, position, payRate, hireDate)
-VALUES (:firstNameInput, :lastNameInput, :phoneInput, :positionInput, :payRateInput, :hireDateInput);
-
--- add a new product (depends on category and supplier)
-INSERT INTO Products (productName, description, categoryID, supplierID, listPrice, stockQuantity, reorderLevel)
-VALUES (:productNameInput, :descriptionInput, :category_id_from_dropdown_Input, :supplier_id_from_dropdown_Input, 
-:listPriceInput, :stockQtyInput, :reorderLevelInput);
-
--- add a new sale (depends on customer and employee)
-INSERT INTO Sales (customerID, employeeID, saleDate)
-VALUES (:customer_ID_from_dropdown_Input, :employee_ID_from_dropdown_Input, :saleDateInput);
-
--- add a new sale detail (depends on sale and product)
-INSERT INTO SaleDetails (saleID, productID, quantity, unitPrice)
-VALUES (:sale_ID_from_dropdown_Input, :product_ID_from_dropdown_Input, :quantityInput, :unitPriceInput);
-
---Retrieve options
--- get all categories
+-- Selects all categories with descriptions for browsing
 SELECT categoryID, categoryName, description FROM Categories;
 
--- get a specific category for update
+-- Selects a specific category for update form
 SELECT description FROM Categories WHERE categoryID = :category_ID_from_dropdown_Input;
 
--- get all suppliers
+-- Selects all suppliers for the dropdown list
+SELECT supplierID, supplierName FROM Suppliers;
+
+-- Selects all suppliers with contact information for browsing
 SELECT supplierID, supplierName, email, phoneNumber FROM Suppliers;
 
--- get a specific supplier for update
+-- Selects a specific supplier for update form
 SELECT email, phoneNumber FROM Suppliers WHERE supplierID = :supplier_ID_from_dropdown_Input;
 
--- get all customers
+-- Selects all customers for the dropdown list
+SELECT customerID, CONCAT(firstName, ' ', lastName) AS customerFullName FROM Customers;
+
+-- Selects all customers with full details for browsing
 SELECT customerID, firstName, lastName, email, phoneNumber, address, loyaltyPoints FROM Customers;
 
--- get a specific customer for update
+-- Selects a specific customer for update form
 SELECT email, phoneNumber, address, loyaltyPoints FROM Customers WHERE customerID = :customer_ID_from_dropdown_Input;
 
--- get all employees
+-- Selects all employees for the dropdown list
+SELECT employeeID, CONCAT(firstName, ' ', lastName) AS employeeFullName FROM Employees;
+
+-- Selects all employees with full details for browsing
 SELECT employeeID, firstName, lastName, phoneNumber, position, payRate, DATE_FORMAT(hireDate, '%Y-%m-%d') AS hireDate FROM Employees;
 
--- get a specific employee for update
-SELECT phoneNumber,position, payRate FROM Employees WHERE employeeID = :employee_ID_from_dropdown_Input;
+-- Selects a specific employee for update form
+SELECT phoneNumber, position, payRate FROM Employees WHERE employeeID = :employee_ID_from_dropdown_Input;
 
--- get all products with category and supplier info
+-- Selects all products for the dropdown list
+SELECT productID, productName FROM Products;
+
+-- Selects all products with category and supplier info for browsing
 SELECT Products.productID, Products.productName, Products.description, 
        Categories.categoryName AS category, Suppliers.supplierName as supplier, Products.listPrice, Products.stockQuantity, Products.reorderLevel
 FROM Products
 INNER JOIN Categories ON Products.categoryID = Categories.categoryID
 INNER JOIN Suppliers  ON Products.supplierID = Suppliers.supplierID;
 
--- get a specific product for update
+-- Selects a specific product for update form
 SELECT Products.description, Categories.categoryName AS category, Suppliers.supplierName as supplier, Products.listPrice, Products.stockQuantity, Products.reorderLevel
 FROM Products
 INNER JOIN Categories ON Products.categoryID = Categories.categoryID
 INNER JOIN Suppliers  ON Products.supplierID = Suppliers.supplierID
 WHERE Products.productID = :product_ID_from_dropdown_input;
 
--- get all sales with customer and employee info, left join sales so that the sale records with non-rigisted customers will be displayed
+-- Selects all sales with customer and employee info for browsing
+-- Uses LEFT JOIN so that sales records with non-registered customers will be displayed
 SELECT Sales.saleID, DATE_FORMAT(Sales.saleDate, '%Y-%m-%d') AS saleDate, CONCAT(Customers.firstName, ' ', Customers.lastName) AS customerFullName,
        CONCAT(Employees.firstName, ' ', Employees.lastName) AS employeeFullName
 FROM Sales
@@ -75,95 +64,54 @@ LEFT JOIN Customers ON Sales.customerID = Customers.customerID
 LEFT JOIN Employees ON Sales.employeeID = Employees.employeeID
 ORDER BY Sales.saleID ASC;
 
--- get sale details 
+-- Selects all sale IDs for the dropdown list
+SELECT saleID FROM Sales;
+
+-- Selects all sale details with product and sale info for browsing
 SELECT Sales.saleID, SaleDetails.saleDetailID, Products.productName, SaleDetails.quantity, SaleDetails.unitPrice
 FROM SaleDetails
 INNER JOIN Products ON SaleDetails.productID = Products.productID
 INNER JOIN Sales ON SaleDetails.saleID = Sales.saleID
 ORDER BY Sales.saleID ASC;
 
--- get product id and name for dropdown box
-SELECT productID, productName FROM Products;
-
--- get customer id and name for dropdown box
-SELECT customerID, CONCAT(firstName, ' ', lastName) AS customerFullName FROM Customers;
-
--- get employee id and name for dropdown box
-SELECT employeeID, CONCAT(firstName, ' ', lastName) AS employeeFullName FROM Employees;
-
--- get supplier id and name for dropdown box
-SELECT supplierID, supplierName FROM Suppliers;
-
--- get category id and name for dropdown box
-SELECT categoryID, categoryName FROM Categories;
-
--- get sale id for dropdown box
-SELECT saleID FROM Sales;
-
--- get sale detail id for dropdown box
+-- Selects all sale detail IDs for the dropdown list
 SELECT saleDetailID FROM SaleDetails;
 
--- Update options
--- update a category
-UPDATE Categories
-SET description = :categoryDescriptionInput
-WHERE categoryID = :category_ID_from_dropdown_Input;
+-- ########################################
+-- ########## CREATE OPERATIONS (Using Stored Procedures)
+-- ########################################
 
--- update a supplier
-UPDATE Suppliers
-SET email = :supplierEmailInput, phoneNumber = :supplierPhoneInput
-WHERE supplierID = :supplier_ID_from_dropdown_Input;
+-- Creates a new customer using stored procedure
+CALL sp_create_customer(:firstNameInput, :lastNameInput, :phoneInput, :emailInput, :addressInput, :loyaltyPointsInput);
 
--- update a customer
-UPDATE Customers
-SET phoneNumber = :phoneInput,
-    email = :emailInput, address = :addressInput, loyaltyPoints = :loyaltyPointsInput
-WHERE customerID = :customer_ID_from_dropdown_Input;
+-- Creates a new sale using stored procedure
+CALL sp_create_sale(:customer_ID_from_dropdown_Input, :employee_ID_from_dropdown_Input, :saleDateInput);
 
--- update an employee
-UPDATE Employees
-SET phoneNumber = :phoneInput,
-    position = :positionInput, payRate = :payRateInput
-WHERE employeeID = :employee_ID_from_dropdown_Input;
+-- Creates a new sale detail using stored procedure
+CALL sp_create_saledetail(:sale_ID_from_dropdown_Input, :product_ID_from_dropdown_Input, :quantityInput, :unitPriceInput);
 
--- update a product
-UPDATE Products
-SET description = :descriptionInput, 
-    categoryID = :category_id_from_dropdown_Input, supplierID = :supplier_id_from_dropdown_Input, 
-    listPrice = :listPriceInput, stockQuantity = :stockQtyInput, reorderLevel = :reorderLevelInput
-WHERE productID = :product_ID_from_dropdown_Input;
+-- ########################################
+-- ########## UPDATE OPERATIONS (Using Stored Procedures)
+-- ########################################
 
--- update a sale
-UPDATE Sales
-SET customerID = :customer_id_from_dropdown_Input, employeeID = :employee_id_from_dropdown_Input, 
-    saleDate = :saleDateInput
-WHERE saleID = :sale_ID_from_dropdown_Input;
+-- Updates an existing customer using stored procedure
+CALL sp_update_customer(:customer_ID_from_dropdown_Input, :firstNameInput, :lastNameInput, :phoneInput, :emailInput, :addressInput, :loyaltyPointsInput);
 
--- update a sale detial
-UPDATE SaleDetails
-SET productID = :product_id_from_dropdown_Input, saleID = :sale_id_from_dropdown_Input, 
-    quantity = :quantityInput, unitPrice = :unitPriceInput
-WHERE saleDetailID = :sale_detail_ID_from_dropdown_Input;
+-- Updates an existing sale using stored procedure
+CALL sp_update_sale(:sale_ID_from_dropdown_Input, :customer_id_from_dropdown_Input, :employee_id_from_dropdown_Input, :saleDateInput);
 
+-- Updates an existing sale detail using stored procedure
+CALL sp_update_saledetail(:sale_detail_ID_from_dropdown_Input, :sale_id_from_dropdown_Input, :product_id_from_dropdown_Input, :quantityInput, :unitPriceInput);
 
--- Delete options
--- delete a category
-DELETE FROM Categories WHERE categoryID = :category_ID_from_dropdown_Input;
+-- ########################################
+-- ########## DELETE OPERATIONS (Using Stored Procedures)
+-- ########################################
 
--- delete a supplier
-DELETE FROM Suppliers WHERE supplierID = :supplier_ID_from_dropdown_Input;
+-- Deletes an existing customer using stored procedure
+CALL sp_delete_customer(:customer_ID_from_dropdown_Input);
 
--- delete a customer
-DELETE FROM Customers WHERE customerID = :customer_ID_from_dropdown_Input;
+-- Deletes an existing sale using stored procedure
+CALL sp_delete_sale(:sale_ID_from_dropdown_Input);
 
--- delete an employee
-DELETE FROM Employees WHERE employeeID = :employee_ID_from_dropdown_Input;
-
--- delete a product
-DELETE FROM Products WHERE productID = :product_ID_from_dropdown_Input;
-
--- delete a sale
-DELETE FROM Sales WHERE saleID = :sale_ID_from_dropdown_Input;
-
--- delete a sale detail
-DELETE FROM SaleDetails WHERE saleDetailID = :saleDetail_ID_from_dropdown_Input;
+-- Deletes an existing sale detail using stored procedure
+CALL sp_delete_saledetail(:saleDetail_ID_from_dropdown_Input);

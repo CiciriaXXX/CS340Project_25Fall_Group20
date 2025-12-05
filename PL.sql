@@ -1,7 +1,6 @@
 -- Citation for the following code:
 -- Date: 12/01/2025
--- The CRUD logic (Create, Read, Update, Delete stored procedures) in this file
--- is my own work, adapted from course material provided in CS 340.
+-- The CRUD logic in this file is my own work, adapted from course material provided in CS 340.
 -- All stored procedures, triggers, and application-specific logic have been
 -- written for our project requirements.
 

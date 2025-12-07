@@ -1,34 +1,308 @@
 /*
  Citation for the following code:
- Date: 11/19/2025
- This file's is adapted from the OSU CS 340 starter code.
- But we have modified cuForm style for better appearance.
- https://canvas.oregonstate.edu/courses/2017561/pages/exploration-web-application-technology-2?module_item_id=25645131
+ Date: 12/06/2025
+ The code is original.
 */
 
-h1, h2,p { margin-left: 16px;}
-table {border-collapse: collapse;margin-left: 32px;}
-th, td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: center;
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #F4F4F4; 
+    color: #333333;
+    display: flex; 
+    flex-direction: column;
+    align-items: center; 
 }
-th {background-color: #f2f2f2;}
-tr:nth-child(even) {background-color: #f9f9f9;}
-input, select { margin-bottom: 4px;margin-right: 12px;}
-nav {background-color: #cecece;padding: 16px;}
-a {margin-left: 16px;}
-.homepageDescription {margin-left: 32px;}
-.cuForm {
-    display: flex;          
-    flex-wrap: wrap;          
-    align-items: center;     
-    gap: 12px 16px;           
-    margin-left: 32px;
-    max-width: max-content;          
+
+
+nav {
+    width: 100%; 
+}
+
+.content-wrapper {
+    width: 90%; 
+    max-width: 1200px; 
+    margin: 20px auto;
     padding: 20px;
-    border: 2px solid #ddd;
+    background-color: #FFFFFF; 
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); 
     border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+h1, h2, p {
+    margin-left: 0; 
+    padding-left: 0;
+    text-align: left; 
+}
+
+h1 {
+    color: #FF8C00;
+    border-bottom: 3px solid #222222;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+h2 {
+    color: #222222;
+    margin-top: 25px;
+}
+
+nav {
+    background-color: #222222;
+    padding: 18px 32px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+}
+
+nav a {
+    color: #FFFFFF;
+    text-decoration: none;
+    margin-left: 20px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: 500;
+}
+
+nav a:first-child {
+    margin-left: 0;
+    font-weight: bold;
+    color: #FF8C00;
+    font-size: 1.1em;
+}
+
+nav a:hover:not(:first-child) {
+    background-color: #FF8C00;
+    color: #222222;
+}
+
+nav a[href="/reset-table-data"] {
+    color: #FFA07A !important;
+    font-weight: bold;
+    margin-left: auto;
+    padding: 8px 15px;
+    border: 1px solid #FFA07A;
+}
+
+nav a[href="/reset-table-data"]:hover {
+    background-color: #FFA07A;
+    color: #222222 !important;
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%; 
+    margin: 20px 0; 
+    background-color: #FFFFFF;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px 18px;
+    text-align: center;
+    border-bottom: 1px solid #EEEEEE;
+    border-right: 1px solid #EEEEEE;
+}
+
+th {
+    background-color: #222222;
+    color: #FF8C00;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+th:last-child, td:last-child {
+    border-right: none;
+}
+
+tr:nth-child(even) {
+    background-color: #F8F8F8;
+}
+
+tr:hover {
+    background-color: #FFF0E0;
+}
+
+.cuForm {
+    display: flex;
+    flex-direction: column; 
+    gap: 15px 0; 
+    margin: 20px 0;
+    padding: 25px;
+    border: 2px solid #FF8C00;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    max-width: 400px; 
+}
+
+
+.cuForm > * {
+    display: flex;
+    flex-direction: column; 
+    gap: 5px;
+}
+
+.cuForm label {
+    font-weight: 600;
+    color: #333333;
+    display: block;
+    margin-bottom: 0; 
+}
+
+.cuForm input[type="text"], 
+.cuForm input[type="number"],
+.cuForm input[type="date"],
+.cuForm input[type="email"],
+.cuForm select {
+    padding: 10px;
+    border: 1px solid #CCCCCC;
+    border-radius: 4px;
+    width: 100%; 
+    box-sizing: border-box; 
+    min-width: unset; 
+}
+
+.cuForm input:focus, .cuForm select:focus {
+    border-color: #FF8C00;
+    box-shadow: 0 0 5px rgba(255, 140, 0, 0.5);
+    outline: none;
+}
+
+.cuForm input[type="submit"] {
+    background-color: #FF8C00;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.1s;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.cuForm input[type="submit"]:hover {
+    background-color: #E07B00;
+    transform: translateY(-1px);
+}
+
+.homepageDescription {
+    margin-left: 0;
+    margin-top: 20px;
+    font-style: italic;
+    color: #555555;
+}
+
+table button[type="submit"] {
+    background-color: #B22222;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 0.9em;
+}
+
+table button[type="submit"]:hover {
+    background-color: #8B0000;
+}
+.required {
+    color: red;
+    font-weight: bold;
+    margin-left: 5px; 
+}
+
+.home-header {
+    margin-bottom: 30px;
+    padding: 10px 0;
+}
+
+.home-header h1 {
+    font-size: 2.5em;
+    color: #222222;
+    border-bottom: 3px solid #FF8C00; 
+}
+
+.home-header p {
+    font-size: 1.1em;
+    color: #555555;
+    margin-top: 15px;
+}
+
+.call-to-action {
+    font-weight: bold;
+    color: #FF8C00;
+}
+
+.table-card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.data-card {
+    display: block;
+    text-decoration: none;
+    padding: 20px;
+    border-radius: 8px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    min-height: 150px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.data-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.data-card h3 {
+    margin: 0 0 10px 0;
+    padding: 0;
+    font-size: 1.4em;
+    border-bottom: none;
+    color: inherit; 
+}
+
+.data-card p {
+    margin: 5px 0 0 0;
+    padding: 0;
+    font-size: 1em;
+    font-weight: 500;
+}
+
+.description-small {
+    font-size: 0.9em;
+    color: #888;
+    margin-top: 10px !important;
+}
+
+.card-cud {
+    background-color: #FFF5E0; 
+    border: 2px solid #FF8C00;
+    color: #222222;
+}
+
+.card-cud h3 {
+    color: #FF8C00; 
+}
+
+
+.card-read {
+    background-color: #F8F8F8;
+    border: 2px solid #CCCCCC;
+    color: #222222;
+}
+
+.card-read h3 {
+    color: #222222; 
 }

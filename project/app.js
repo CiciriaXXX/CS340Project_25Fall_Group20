@@ -156,10 +156,10 @@ app.get('/saledetails', async function (req, res) {
     try {
         const query1 = "SELECT Sales.saleID, SaleDetails.saleDetailID, Products.productName, SaleDetails.quantity, SaleDetails.unitPrice FROM SaleDetails INNER JOIN Products ON SaleDetails.productID = Products.productID INNER JOIN Sales ON SaleDetails.saleID = Sales.saleID ORDER BY Sales.saleID ASC;";
         const query2 ="SELECT productID, productName FROM Products";
-        const query3 ="SELECT saleID FROM Sales;";
+        const query3 ="SELECT Sales.saleID, DATE_FORMAT(Sales.saleDate, '%Y-%m-%d') AS saleDate, CONCAT(Customers.firstName, ' ', Customers.lastName) AS customerFullName, CONCAT(Employees.firstName, ' ', Employees.lastName) AS employeeFullName FROM Sales LEFT JOIN Customers ON Sales.customerID = Customers.customerID LEFT JOIN Employees ON Sales.employeeID = Employees.employeeID ORDER BY Sales.saleID ASC;";
         const [saledetails] = await db.query(query1);
         const [products] = await db.query(query2);
-        const [sales] = await db.query(query3)
+        const [sales] = await db.query(query3);
         res.render('saledetails', {saledetails,products,sales});
     } catch (error) {
         console.error('Error executing queries:', error);

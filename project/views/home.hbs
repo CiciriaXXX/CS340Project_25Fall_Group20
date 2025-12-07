@@ -1,16 +1,55 @@
  {{!--
  Citation for the following code:
- Date: 11/19/2025
- This file's structure is adapted from the OSU CS 340 starter code.
- All variables, queries, and application-specific logic have been rewritten 
- for our project requirements.
- https://canvas.oregonstate.edu/courses/2017561/pages/exploration-web-application-technology-2?module_item_id=25645131
+ Date: 12/06/2025
+ The code is original.
  --}}
  
-<h1>Beaver Stationery Home page</h1>
-<div class="homepageDescription">
-    <p>Beaver Stationery is a retail store located in Portland, OR, specializing in stationery, office supplies, and art materials. 
-    The store serves approximately 6,000 customers and processes around 18,000 transactions annually.
-    The store maintains an inventory of 2,000 products sourced from 30 suppliers and employs 10 staff members.
-    The company needs a database-driven management system to track product inventory levels, record sales and loyalty programs, and monitor employee sales performance to improve operational efficiency.</p>
-</div>
+    <header class="home-header">
+        <h1>Beaver Stationery Database Management System</h1>
+        <p>Welcome to the management interface for Beaver Stationery. Please select a section to view or manage the corresponding data.</p>
+    </header>
+    <div class="table-card-container">
+
+        <a href="/customers" class="data-card card-cud">
+            <h3>Customers</h3>
+            <p>Full Management (CUD)</p>
+            <p class="description-small">Detailed records of registered customers, including contact information and loyalty points.</p>
+        </a>
+
+        <a href="/sales" class="data-card card-cud">
+            <h3>Sales</h3>
+            <p>Full Management (CUD)</p>
+            <p class="description-small">Summary information for all transactions, including the transaction date, customer, and responsible employee.</p>
+        </a>
+
+        <a href="/saledetails" class="data-card card-cud">
+            <h3>Sale Details</h3>
+            <p>Full Management (CUD)</p>
+            <p class="description-small">Records of specific quantity and unit price for each product in every sale.</p>
+        </a>
+        
+        <a href="/products" class="data-card card-read">
+            <h3>Products</h3>
+            <p>Read-Only</p>
+            <p class="description-small">Detailed information on the products we maintain, including inventory, pricing, and reorder levels.</p>
+        </a>
+
+        <a href="/categories" class="data-card card-read">
+            <h3>Categories</h3>
+            <p>Read-Only</p>
+            <p class="description-small">Our products are organized into different categories for easy management. Here, you can view the descriptions of these different categories</p>
+        </a>
+        
+        <a href="/suppliers" class="data-card card-read">
+            <h3>Suppliers</h3>
+            <p>Read-Only</p>
+            <p class="description-small">Information on the vendors who supply products to the store, used for communication.</p>
+        </a>
+
+        <a href="/employees" class="data-card card-read">
+            <h3>Employees</h3>
+            <p>Read-Only</p>
+            <p class="description-small">Records details for our staff members, including position, pay rate, and hiring date.</p>
+        </a>
+        
+    </div>
